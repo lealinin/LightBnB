@@ -16,43 +16,99 @@ const pool = new Pool({
  * @param {String} email The email of the user.
  * @return {Promise<{}>} A promise to the user.
  */
+
 const getUserWithEmail = function(email) {
-  let user;
-  for (const userId in users) {
-    user = users[userId];
-    if (user.email.toLowerCase() === email.toLowerCase()) {
-      break;
-    } else {
-      user = null;
+  return pool.query(`
+  SELECT * FROM users
+  WHERE email = $1
+  `, [email])
+  .then(res => {
+    if (res.rows.length) {
+      return res.rows;
     }
-  }
-  return Promise.resolve(user);
+    return null;
+  });
 }
+
 exports.getUserWithEmail = getUserWithEmail;
+
+// const getUserWithEmail = function(email) {
+//   let user;
+//   for (const userId in users) {
+//     user = users[userId];
+//     if (user.email.toLowerCase() === email.toLowerCase()) {
+//       break;
+//     } else {
+//       user = null;
+//     }
+//   }
+//   return Promise.resolve(user);
+// }
+
+// getUserWithId
+// Will do the same as getUserWithEmail, but using the user's id instead of email.
 
 /**
  * Get a single user from the database given their id.
  * @param {string} id The id of the user.
  * @return {Promise<{}>} A promise to the user.
  */
+
+// const getUserWithId = function(id) {
+//   return Promise.resolve(users[id]);
+// }
+
 const getUserWithId = function(id) {
-  return Promise.resolve(users[id]);
+  return pool.query(`
+  SELECT * FROM users
+  WHERE id = $1
+  `, [id])
+  .then(res => {
+    if (res.rows.length) {
+      return res.rows;
+    } 
+    return null;
+  });
 }
+
 exports.getUserWithId = getUserWithId;
 
+// addUser
+// Accepts a user object that will have a name, email, and hashed password property.
+// This function should insert the new user into the database.
+// It will return a promise that resolves with the new user object. 
+// This object should contain the user's id after it's been added to the database.
+// Add RETURNING *; to the end of an INSERT query to return the objects that were inserted. 
+// This is handy when you need the auto generated id of an object you've just added to the database.
 
 /**
  * Add a new user to the database.
  * @param {{name: string, password: string, email: string}} user
  * @return {Promise<{}>} A promise to the user.
  */
-const addUser =  function(user) {
-  const userId = Object.keys(users).length + 1;
-  user.id = userId;
-  users[userId] = user;
-  return Promise.resolve(user);
+
+const addUser = function(user) {
+  return pool.query(`
+  INSERT INTO users (name, email, password)
+  VALUES ($1, $2, $3)
+  RETURNING*;
+  `, [user.name, user.email, user.password])
+  .then (res => {
+    if (res.rows.length) {
+      return res.rows;
+    }
+      return null;
+  });
 }
+
 exports.addUser = addUser;
+
+// const addUser =  function(user) {
+//   const userId = Object.keys(users).length + 1;
+//   user.id = userId;
+//   users[userId] = user;
+//   return Promise.resolve(user);
+// }
 
 /// Reservations
 
