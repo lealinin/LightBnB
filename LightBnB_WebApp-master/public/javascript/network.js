@@ -20,6 +20,9 @@ function logIn(data) {
   });
 }
 
+
+
+
 function signUp(data) {
   return $.ajax({
     method: "POST",

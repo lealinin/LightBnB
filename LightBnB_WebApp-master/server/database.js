@@ -24,7 +24,7 @@ const getUserWithEmail = function(email) {
   `, [email])
   .then(res => {
     if (res.rows.length) {
-      return res.rows;
+      return res.rows[0];
     }
     return null;
   });
@@ -65,7 +65,7 @@ const getUserWithId = function(id) {
   `, [id])
   .then(res => {
     if (res.rows.length) {
-      return res.rows;
+      return res.rows[0];
     } 
     return null;
   });
@@ -95,7 +95,7 @@ const addUser = function(user) {
   `, [user.name, user.email, user.password])
   .then (res => {
     if (res.rows.length) {
-      return res.rows;
+      return res.rows[0];
     }
       return null;
   });
