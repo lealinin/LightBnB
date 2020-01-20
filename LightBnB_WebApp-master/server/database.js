@@ -38,10 +38,6 @@ exports.getUserWithEmail = getUserWithEmail;
  * @return {Promise<{}>} A promise to the user.
  */
 
-// const getUserWithId = function(id) {
-//   return Promise.resolve(users[id]);
-// }
-
 const getUserWithId = function (id) {
   return pool.query(`
   SELECT * FROM users
@@ -87,10 +83,6 @@ exports.addUser = addUser;
  * @return {Promise<[{}]>} A promise to the reservations.
  */
 
-// This function accepts a guest_id, limits the properties to 10 and returns a promise. 
-// The promise should resolve reservations for that user. 
-// Use the All My Reservations query that you made in a previous assignments.
-
 const getAllReservations = function (guest_id, limit = 10) {
   return pool.query(`
   SELECT properties.*, reservations.*, avg(rating) as average_rating
@@ -135,10 +127,6 @@ const getAllProperties = function (options, limit = 10) {
     queryString += `WHERE city LIKE $${queryParams.length}`;
   }
 
-  // if an owner_id is passed in, only return properties belonging to that owner.
-  // if a minimum_price_per_night and a maximum_price_per_night, only return properties within that price range.
-  // if a minimum_rating is passed in, only return properties with a rating equal to or higher than that.
-
   if (options.owner_id) {
     queryParams.push(options.owner_id);
     if (queryParams.length === 1) {
@@ -158,7 +146,7 @@ const getAllProperties = function (options, limit = 10) {
   }
 
   queryString += `
-    GROUP BY properties.id
+  GROUP BY properties.id
   `;
 
   if (options.minimum_rating) {
